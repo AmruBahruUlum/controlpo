@@ -1,0 +1,70 @@
+<?php
+$ambilsemuadatanya = mysqli_query($conn, "SELECT m.tanggal, m.no_po, s.namabarang, m.nama_perusahaan, m.qty, m.id_barang, m.idmasuk 
+    FROM masuk m 
+    JOIN stock s ON m.id_barang = s.id_barang
+    ORDER BY m.tanggal DESC");
+
+while($data = mysqli_fetch_array($ambilsemuadatanya)) {
+    $tanggal = $data['tanggal'];
+    $no_po = $data['no_po'];
+    $namabarang = $data['namabarang'];
+    $nama_perusahaan = $data['nama_perusahaan'];
+    $qty = $data['qty'];
+    $idb = $data['id_barang'];
+    $idm = $data['idmasuk'];
+?>
+<tr>
+    <td><?=$tanggal;?></td>
+    <td><?=$no_po;?></td>
+    <td><?=$namabarang;?></td>
+    <td><?=$nama_perusahaan;?></td>
+    <td><?=$qty;?></td>
+    <td>
+        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#Edit<?=$idb;?>">Edit</button>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#Delete<?=$idb;?>">Delete</button>
+    </td>
+</tr>
+
+<!-- Modal Edit -->
+<div class="modal fade" id="Edit<?=$idb;?>">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Barang</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                <div class="modal-body">
+                    <input type="number" name="qty" value="<?=$qty;?>" class="form-control" required>
+                    <br>
+                    <input type="hidden" name="idb" value="<?=$idb;?>">
+                    <input type="hidden" name="idm" value="<?=$idm;?>">
+                    <button type="submit" class="btn btn-primary" name="updatebarangmasuk">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Delete -->
+<div class="modal fade" id="Delete<?=$idb;?>">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Hapus Barang</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                <div class="modal-body">
+                    Apakah Anda yakin ingin menghapus <?=$namabarang;?>?
+                    <br><br>
+                    <input type="hidden" name="idb" value="<?=$idb;?>">
+                    <button type="submit" class="btn btn-danger" name="hapusbarangmasuk">Hapus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<?php 
+}
+?>
